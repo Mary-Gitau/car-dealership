@@ -1,0 +1,290 @@
+{% extends "base.html" %}
+
+{% block title %}Available Cars - CarZone{% endblock %}
+
+{% block content %}
+<style>
+  .container {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 20px;
+  }
+
+  h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 28px;
+  }
+
+  .filter-form {
+    margin-bottom: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+  }
+
+  .filter-form input {
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+
+  .filter-form button {
+    background-color: #2563eb;
+    color: white;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+
+  .card {
+    background-color: cornsilk;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease;
+
+  }
+
+  .card:hover {
+    transform: translateY(-4px);
+  }
+
+  .card img.main-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+
+  .card-body {
+    padding: 16px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+
+  .card-text {
+    font-size: 14px;
+    margin-bottom: 10px;
+    color: #666;
+  }
+
+  .card-price {
+    font-weight: bold;
+    color: #111;
+    margin-bottom: 16px;
+  }
+
+  .thumbs {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+
+  .thumbs img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+
+  footer {
+    background: #f8f9fa;
+    text-align: center;
+    padding: 15px 0;
+    font-size: 14px;
+    color: #6c757d;
+  }
+
+
+  .hero-section {
+    background: linear-gradient(rgba(227, 243, 2, 0.5), rgba(0, 0, 0, 0.5)),
+      url('/static/images/hero-car.jpg') center center/cover no-repeat;
+    padding: 100px 100px;
+    color: white;
+    text-align: center;
+    position: relative;
+  }
+
+  .hero-title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    animation: fadeInDown 1s ease forwards;
+    color: orange;
+  }
+
+  .hero .p2 {
+    color: #2563eb;
+
+  }
+
+
+  .hero-subtitle {
+    font-size: 1.25rem;
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.6;
+    animation: fadeIn 2s ease forwards;
+  }
+
+  @media (max-width: 768px) {
+    .hero-title {
+      font-size: 2.2rem;
+    }
+
+    .hero-subtitle {
+      font-size: 1rem;
+    }
+  }
+
+  /* Keyframe animations (if not using animate.css) */
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-40px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* Optional: overlay effect */
+  .hero-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(13, 13, 13, 0.4);
+    z-index: 1;
+  }
+
+  .hero-section .container {
+    position: relative;
+    z-index: 2;
+  }
+</style>
+<div class="hero-section">
+  <div class="container">
+    <h1 class="hero-title animate_animated animate_fadeInDown">Welcome to Hakki Car Dealership</h1>
+    <p2 class="hero-subtitle animate_animated animatefadeIn animate_delay-1s">
+      Discover a wide selection of quality cars from top brands, all in one place. Whether you're looking for a
+      sleek sedan, a rugged SUV, or a budget-friendly ride, CarZone connects you with the best deals around.
+      Ready to drive? Start your car search today.
+    </p2>
+
+
+
+  </div>
+</div>
+
+
+<div class="container">
+  <h2>Available Cars</h2>
+
+  <!-- Filter Form -->
+  <form method="get" class="filter-form">
+    <input type="text" name="name" placeholder="Model Name" value="{{ request.args.get('name', '') }}">
+    <input type="text" name="brand" placeholder="Brand" value="{{ request.args.get('brand', '') }}">
+    <input type="number" name="year" placeholder="Year" value="{{ request.args.get('year', '') }}">
+    <input type="number" name="min_price" placeholder="Min Price" value="{{ request.args.get('min_price', '') }}">
+    <input type="number" name="max_price" placeholder="Max Price" value="{{ request.args.get('max_price', '') }}">
+    <button type="submit">Filter</button>
+  </form>
+
+  <!-- Car Cards -->
+
+  <div class="grid">
+    {% for car in cars %}
+    <div class="card">
+      {% if car.images %}
+      <img src="{{ url_for('static', filename=car.images[0].image_url) }}" class="main-img" alt="{{ car.name }}"
+        data-bs-toggle="modal" data-bs-target="#carouselModal{{ car.id }}">
+      {% else %}
+      <img src="{{ url_for('static', filename='default.jpg') }}" class="main-img" alt="No image">
+      {% endif %}
+
+      <div class="card-body">
+        <h5 class="card-title">{{ car.brand }} {{ car.name }} ({{ car.year }})</h5>
+        <p class="card-text">{{ car.description }}</p>
+        <p class="card-price">${{ '%.2f' | format(car.price) }}</p>
+
+        <div class="thumbs">
+          {% for img in car.images %}
+          <img src="{{ url_for('static', filename=img.image_url) }}" alt="Image" class="img-thumbnail"
+            data-bs-toggle="modal" data-bs-target="#carouselModal{{ car.id }}">
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap Modal with Carousel -->
+    <div class="modal fade" id="carouselModal{{ car.id }}" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-body p-0">
+            <div id="carousel{{ car.id }}" class="carousel slide" data-bs-ride="carousel">
+              <div class="carousel-inner">
+                {% for img in car.images %}
+                <div class="carousel-item {% if loop.first %}active{% endif %}">
+                  <img src="{{ url_for('static', filename=img.image_url) }}" class="d-block w-100" alt="...">
+                </div>
+                {% endfor %}
+              </div>
+              <button class="carousel-control-prev" type="button" data-bs-target="#carousel{{ car.id }}"
+                data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#carousel{{ car.id }}"
+                data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+  {% endfor %}
+
+  {% endblock %}

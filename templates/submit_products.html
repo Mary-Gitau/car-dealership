@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .form-container {
+        background: #fff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        margin-top: 60px;
+    }
+
+    h2 {
+        font-weight: 600;
+        color: #333;
+        text-align: center;
+    }
+
+    .form-label {
+        font-weight: 500;
+        color: #444;
+    }
+
+    .btn-primary {
+        background-color: #2563eb;
+        border: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #1d4ed8;
+    }
+
+    body {
+        background-color: #f5f5f5;
+    }
+</style>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 form-container">
+            <h2 class="mb-4">Submit a Car</h2>
+            <form method="POST" enctype="multipart/form-data">
+                {{ form.csrf_token }}
+
+                <div class="mb-3">
+                    <label class="form-label">Car Name</label>
+                    {{ form.name(class="form-control") }}
+                    {% if form.name.errors %}
+                        <div class="text-danger">{{ form.name.errors[0] }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Price</label>
+                    {{ form.price(class="form-control") }}
+                    {% if form.price.errors %}
+                        <div class="text-danger">{{ form.price.errors[0] }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Year</label>
+                    {{ form.year(class="form-control") }}
+                    {% if form.year.errors %}
+                        <div class="text-danger">{{ form.year.errors[0] }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Description</label>
+                    {{ form.description(class="form-control", rows="4") }}
+                    {% if form.description.errors %}
+                        <div class="text-danger">{{ form.description.errors[0] }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Upload Images</label>
+                    {{ form.images(class="form-control", multiple=True) }}
+                    {% if form.images.errors %}
+                        <div class="text-danger">{{ form.images.errors[0] }}</div>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Submit Car</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

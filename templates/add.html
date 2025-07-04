@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Add New Car - Admin{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+  <div class="card shadow p-4">
+    <h2 class="text-center mb-4">Add a New Car</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+      <div class="mb-3">
+        <label for="name" class="form-label">Car Name</label>
+        <input type="text" name="name" id="name" class="form-control" placeholder="e.g. Toyota Supra" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="price" class="form-label">Price</label>
+        <input type="number" name="price" id="price" class="form-control" placeholder="e.g. 45000" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="year" class="form-label">Year</label>
+        <input type="number" name="year" id="year" class="form-control" placeholder="e.g. 2022" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea name="description" id="description" class="form-control" rows="4" placeholder="Enter a brief description..."></textarea>
+      </div>
+
+      <div class="mb-4">
+        <label for="image" class="form-label">Upload Images</label>
+        <input type="file" name="image" id="image" class="form-control" multiple required>
+        <div class="form-text">You can upload multiple images (JPG, PNG).</div>
+      </div>
+
+      <div class="text-center">
+        <button type="submit" class="btn btn-primary px-4 py-2">Add Car</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<style>
+  .container {
+    max-width: 720px;
+  }
+
+  .card {
+    border-radius: 1rem;
+    background-color: #fff;
+  }
+
+  .form-label {
+    font-weight: 500;
+  }
+
+  .btn-primary {
+    background-color: #2563eb;
+    border: none;
+    font-weight: 500;
+    border-radius: 0.5rem;
+  }
+
+  .btn-primary:hover {
+    background-color: #1e40af;
+  }
+
+  input::file-selector-button {
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.3rem;
+    margin-right: 10px;
+    cursor: pointer;
+  }
+
+  input::file-selector-button:hover {
+    background-color: #1e40af;
+  }
+</style>
+{% endblock %}

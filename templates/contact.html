@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Contact | HAKKI CAR DEALERSHIP{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-12 mb-4">
+      <h2 class="fw-bold">Contact Us</h2>
+      <p class="text-muted">Have questions? Reach out via the form below or use our contact details on the right.</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Contact Form -->
+    <div class="col-md-7 mb-4">
+      <div class="card card-custom p-4">
+        <form method="POST" action="{{ url_for('contact') }}">
+          <div class="mb-3">
+            <label for="name" class="form-label">Your Name</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="email" class="form-label">Email Address</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="message" class="form-label">Message</label>
+            <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100">Send Message</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Contact Info -->
+    <div class="col-md-5 mb-4">
+      <div class="card card-custom p-4">
+        <h5 class="mb-3">Contact Information</h5>
+        <p class="mb-2"><strong>Email:</strong> <a href="mailto:application@hakki-africa.com">application@hakki-africa.com</a></p>
+        <p class="mb-2"><strong>Phone:</strong> <a href="tel:+254711082132">+254 711 082 132</a></p>
+        <p class="mb-0"><strong>Address:</strong> Nairobi, Kenya</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

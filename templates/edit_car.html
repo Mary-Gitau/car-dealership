@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+{% block title %}Edit Car{% endblock %}
+
+{% block content %}
+<style>
+  .container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+  }
+
+  h2 {
+    margin-bottom: 30px;
+    text-align: center;
+  }
+
+  form {
+    margin-bottom: 30px;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-label {
+    font-weight: bold;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 8px;
+  }
+
+  .btn {
+    padding: 10px 20px;
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .btn:hover {
+    background-color: #1d4ed8;
+  }
+
+  .image-preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 15px;
+  }
+
+  .image-box {
+    position: relative;
+    width: 160px;
+  }
+
+  .image-box img {
+    width: 100%;
+    border-radius: 6px;
+    height: 120px;
+    object-fit: cover;
+    border: 1px solid #ccc;
+  }
+
+  .delete-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: red;
+    border: none;
+    color: white;
+    padding: 4px 6px;
+    border-radius: 50%;
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  .sortable-placeholder {
+    border: 2px dashed #ccc;
+    width: 160px;
+    height: 120px;
+    border-radius: 6px;
+  }
+</style>
+
+<div class="container">
+  <h2>Edit Car</h2>
+
+  <form method="POST" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+
+    <div class="form-group">
+      {{ form.name.label(class="form-label") }}
+      {{ form.name(class="form-control") }}
+    </div>
+
+    <div class="form-group">
+      {{ form.price.label(class="form-label") }}
+      {{ form.price(class="form-control") }}
+    </div>
+
+    <div class="form-group">
+      {{ form.year.label(class="form-label") }}
+      {{ form.year(class="form-control") }}
+    </div>
+
+    <div class="form-group">
+      {{ form.description.label(class="form-label") }}
+      {{ form.description(class="form-control") }}
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Upload New Images</label>
+      <input type="file" name="images" multiple class="form-control">
+    </div>
+
+    <button type="submit" class="btn">Update Car</button>
+  </form>
+
+  {% if car.images %}
+    <h4>Existing Images</h4>
+    <div class="image-preview sortable" id="sortable-images">
+      {% for img in car.images %}
+        <div class="image-box" data-id="{{ img.id }}">
+          <img src="{{ img.image_url }}" alt="Car image">
+          <form method="POST" action="{{ url_for('delete_image', image_id=img.id) }}">
+            <button type="submit" class="delete-btn" onclick="return confirm('Delete this image?')">×</button>
+          </form>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
+<script>
+  $(function () {
+    $("#sortable-images").sortable({
+      placeholder: "sortable-placeholder",
+      update: function (event, ui) {
+        const order = $(this).sortable('toArray', { attribute: 'data-id' });
+        $.ajax({
+          url: "{{ url_for('reorder_images') }}",
+          method: "POST",
+          contentType: "application/json",
+          data: JSON.stringify({ order: order }),
+          success: function (response) {
+            console.log("Reordered", response);
+          }
+        });
+      }
+    });
+  });
+</script>
+{% endblock %}

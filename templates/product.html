@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}{{ car.name }} - CarZone{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="bg-white p-4 rounded shadow">
+        <img src="{{ car.image }}" alt="{{ car.name }}" class="w-full h-64 object-cover rounded mb-4">
+        <h2 class="text-2xl font-bold mb-2">{{ car.name }}</h2>
+        <p class="text-xl text-gray-700 mb-2">${{ car.price | format_price }}</p>
+        <p class="text-gray-600 mb-4">{{ car.description }}</p>
+
+        <form action="{{ url_for('add_to_cart', car_id=car.id) }}" method="post" class="mb-3">
+            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                Add to Cart
+            </button>
+        </form>
+
+        {% if current_user.is_authenticated and current_user.role == 'admin' %}
+        <div class="flex gap-2">
+            <a href="{{ url_for('edit_car', id=car.id) }}"
+               class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">
+               Edit
+            </a>
+
+            <form action="{{ url_for('delete_car', id=car.id) }}" method="POST" onsubmit="return confirm('Are you sure?');">
+                <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+                    Delete
+                </button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
